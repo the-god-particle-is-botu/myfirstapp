@@ -1,0 +1,135 @@
+
+FIRSTPAGE:
+
+import 'package:flutter/material.dart';
+import 'secondscreen.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Homepage(),
+    );
+  }
+}
+
+class Homepage extends StatefulWidget {
+  @override
+  _State createState() => _State();
+}
+
+class _State extends State<Homepage> {
+  String amount;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Tip Calculator'),
+      ),
+      body: Container(
+        padding: EdgeInsets.symmetric(vertical: 200, horizontal: 20),
+        child: Column(
+          children: <Widget>[
+            TextField(
+              onChanged: (value_entered) {
+                amount = value_entered;
+              },
+              decoration: InputDecoration(hintText: "enter the bill amount"),
+            ),
+            RaisedButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => SecondScreen(amount: amount),
+                  ));
+                },
+                child: Text("Click here to enter the tip percentage"))
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+SECONDPAGE NAMED secondscreen.dart
+
+
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class SecondScreen extends StatefulWidget {
+  String amount;
+  SecondScreen({this.amount});
+  @override
+  _SecondScreenState createState() => _SecondScreenState(amount);
+}
+
+class _SecondScreenState extends State<SecondScreen> {
+  String amount;
+  _SecondScreenState(this.amount);
+  double tip = 0;
+  double cost = 0;
+  double finalamount = 0;
+  String hard;
+  String soft;
+  void rohith() {
+    setState(() {
+      finalamount = (cost * tip) + cost;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Tip Calculator"),
+        ),
+        body: Container(
+          padding: EdgeInsets.symmetric(vertical: 200, horizontal: 20),
+          child: Column(
+            children: <Widget>[
+              Text('The amount you have entered is ' + amount + ' rupees'),
+              TextField(
+                onChanged: (val) {
+                  tip = (double.parse(val)) / 100;
+                  cost = double.parse(amount);
+                  rohith();
+                  hard = finalamount.toString();
+                  soft = (cost * tip).toString();
+                },
+                decoration:
+                    InputDecoration(hintText: "enter the tip percentage"),
+              ),
+              RaisedButton(
+                  color: Colors.deepOrange,
+                  child: Text("Calculate"),
+                  elevation: 6.0,
+                  onPressed: () {
+                    calculate(context);
+                  })
+            ],
+          ),
+        ));
+  }
+
+  void calculate(BuildContext context) {
+    var alert = AlertDialog(
+        title: Text('The tip amount is ' +
+            soft +
+            ' and the final amount to be paid is ' +
+            hard));
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        });
+  }
+}
+
